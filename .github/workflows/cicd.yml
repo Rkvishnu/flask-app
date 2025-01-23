@@ -23,12 +23,10 @@ jobs:
         password: something
 
 
-    - name: Build Docker image
+    - name: Build and Push Docker image
       run: |
-        docker build -t rkvishnu77/flask-app:latest .
-        
-    - name: Push Docker image to Docker Hub
-      run: |
+        docker build -t rkvishnu77/flask-app:latest -t rkvishnu77/flask-app:${{ github.sha }} .
+        docker push rkvishnu77/flask-app:${{ github.sha }}
         docker push rkvishnu77/flask-app:latest
 
   deploy:
