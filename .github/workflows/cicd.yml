@@ -22,6 +22,7 @@ jobs:
         username: rkvishnu77
         password: something
 
+
     - name: Build Docker image
       run: |
         docker build -t rkvishnu77/flask-app:latest .
