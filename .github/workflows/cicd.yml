@@ -25,7 +25,7 @@ jobs:
 
     - name: Build and Push Docker image
       run: |
-        docker build -t rkvishnu77/flask-app:latest -t rkvishnu77/flask-app:${{ github.sha }} .
+        docker build --cache-from rkvishnu77/flask-app:latest -t rkvishnu77/flask-app:latest -t rkvishnu77/flask-app:${{ github.sha }} .
         docker push rkvishnu77/flask-app:${{ github.sha }}
         docker push rkvishnu77/flask-app:latest
 
@@ -61,5 +61,6 @@ jobs:
     - name: Deploy to EKS
       run: |
         kubectl apply -f k8s/
+        kubectl rollout restart deployment flask-app
         kubectl rollout status deployment/flask-app
 
