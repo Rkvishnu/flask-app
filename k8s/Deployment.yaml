@@ -18,3 +18,4 @@ spec:
         # command: ["sh", "-c", "exit 1"] 1
         ports:
         - containerPort: 5000
+        
