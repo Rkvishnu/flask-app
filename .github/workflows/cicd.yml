@@ -31,4 +31,36 @@ jobs:
       run: |
         docker push rkvishnu77/flask-app:latest
 
- 
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+    # Step 1: Checkout code
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    # Step 2: Install kubectl
+    - name: Install kubectl
+      uses: azure/setup-kubectl@v3
+      with:
+        version: 'latest'
+
+    # Step 3: Configure AWS credentials
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v2
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: ap-south-1
+
+    # Step 4: Update kubeconfig
+    - name: Update kubeconfig
+      run: |
+        aws eks update-kubeconfig --region ap-south-1 --name flask-app-cluster1
+
+    # Step 5: Deploy to EKS
+    - name: Deploy to EKS
+      run: |
+        kubectl set image deployment/flask-app flask-app=rkvishnu77/flask-app:latest -n default
+        kubectl rollout status deployment/flask-app -n default
