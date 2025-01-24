@@ -70,14 +70,22 @@ jobs:
       if: success()
       uses: slackapi/slack-github-action@v1.23.0
       with:
-        slack-message: ":white_check_mark: Deployment to EKS was successful! :tada:"
-        slack-webhook-url: ${{ secrets.SLACK_WEBHOOK_URL }}
+        payload: |
+          {
+            "text": ":white_check_mark: Deployment to EKS was successful! :tada:"
+          }
+      env:
+        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
 
     # Step 7: Send Slack Notification on Failure
     - name: Notify Failure
       if: failure()
       uses: slackapi/slack-github-action@v1.23.0
       with:
-        slack-message: ":x: Deployment to EKS failed! Please check the logs. :warning:"
-        slack-webhook-url: ${{ secrets.SLACK_WEBHOOK_URL }}
+        payload: |
+          {
+            "text": ":x: Deployment to EKS failed! Please check the logs. :warning:"
+          }
+      env:
+        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
 
