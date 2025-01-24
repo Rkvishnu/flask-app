@@ -64,3 +64,20 @@ jobs:
         kubectl rollout restart deployment flask-app
         kubectl rollout status deployment/flask-app
 
+
+      # Step 6: Send Slack Notification on Success
+    - name: Notify Success
+      if: success()
+      uses: slackapi/slack-github-action@v1.23.0
+      with:
+        slack-message: ":white_check_mark: Deployment to EKS was successful! :tada:"
+        slack-webhook-url: ${{ secrets.SLACK_WEBHOOK_URL }}
+
+    # Step 7: Send Slack Notification on Failure
+    - name: Notify Failure
+      if: failure()
+      uses: slackapi/slack-github-action@v1.23.0
+      with:
+        slack-message: ":x: Deployment to EKS failed! Please check the logs. :warning:"
+        slack-webhook-url: ${{ secrets.SLACK_WEBHOOK_URL }}
+
